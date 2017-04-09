@@ -1,8 +1,8 @@
 {
-  "name": "await-event",
+  "name": "@await/event",
   "version": "1.0.0",
   "description": "Asynchronous bridge for event emitters.",
-  "main": "await-event.js",
+  "main": "event.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/runkitdev/await-event"
