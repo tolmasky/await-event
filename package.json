@@ -1,0 +1,19 @@
+{
+  "name": "await-event",
+  "version": "1.0.0",
+  "description": "Asynchronous bridge for event emitters.",
+  "main": "await-event.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/runkitdev/await-event"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Francisco Ryan Tolmasky I",
+  "license": "MIT",
+  "bugs": {
+    "url" : "https://github.com/runkitdev/await-event/issues"
+   }
+}
