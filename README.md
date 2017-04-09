@@ -21,7 +21,7 @@ If any of the rejected events take place, an `EventError` will be thrown.
 
 You can pass an array to resolveOn as well, in which case the return value with be an object with three fields: `name`, `value`, and `args`. Name is the name of the event that succeeded, `value` is simply the first argument passed to the event handler, and `args` is all the arguments. That way you can continue using "single return" style:
 
-```
+```javascript
 const { name, value } = await event({ ..., resolveOn: ["a", "b"] });
 ```
 
