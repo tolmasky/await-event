@@ -80,7 +80,7 @@ TimeoutError.prototype.constructor = TimeoutError;
 
 function EventError(anEventName)
 {
-    const error = new Error("Operation timed out");
+    const error = new Error("Operation errored");
 
     Object.defineProperty(error, "name",
     {
