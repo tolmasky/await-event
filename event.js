@@ -43,7 +43,8 @@ module.exports = function awaitEvent({ eventEmitter, resolveOn = [], rejectOn = 
             if (timeoutID !== false)
                 clearTimeout(timeoutID);
 
-            events.forEach(anEvent => eventEmitter.removeListener(anEvent, fired));
+            events.forEach((anEvent, anIndex) =>
+                eventEmitter.removeListener(anEvent, eventFunctions[anIndex]));
             errorEvents.forEach((anEvent, anIndex) => 
                 eventEmitter.removeListener(anEvent, errorFunctions[anIndex]));
         }
