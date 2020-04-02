@@ -1,6 +1,6 @@
 {
   "name": "@await/event",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Asynchronous bridge for event emitters.",
   "main": "event.js",
   "repository": {
