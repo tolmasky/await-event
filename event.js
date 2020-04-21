@@ -12,10 +12,10 @@ module.exports = function awaitEvent({ eventEmitter, resolveOn = [], rejectOn = 
 
         function errorOut(aFunction, anEventName)
         {
-            return function (anError)
+            return function (...eventArguments)
             {
                 unregister();
-                reject(new aFunction(anEventName, anError));
+                reject(new aFunction(anEventName, eventArguments));
             }
         }
 
@@ -79,7 +79,7 @@ TimeoutError.prototype = Object.create(Error.prototype);
 TimeoutError.prototype.constructor = TimeoutError;
 
 
-function EventError(anEventName, originalError)
+function EventError(anEventName, eventArguments)
 {
     const error = new Error("Operation errored");
 
@@ -92,7 +92,7 @@ function EventError(anEventName, originalError)
     });
 
     error.eventName = anEventName;
-    error.originalError = originalError;
+    error.eventArguments = eventArguments;
 
     Object.setPrototypeOf(error, EventError.prototype);
 
