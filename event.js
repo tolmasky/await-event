@@ -10,12 +10,12 @@ module.exports = function awaitEvent({ eventEmitter, resolveOn = [], rejectOn = 
         const eventFunctions = events.map(anEvent => on(eventEmitter, anEvent, fired(anEvent)));
         const errorFunctions = errorEvents.map(anEvent => on(eventEmitter, anEvent, errorOut(EventError, anEvent)));
 
-        function errorOut(aFunction, ...args)
+        function errorOut(aFunction, anEventName)
         {
-            return function ()
+            return function (anError)
             {
                 unregister();
-                reject(new aFunction(...args));
+                reject(new aFunction(anEventName, anError));
             }
         }
 
@@ -24,16 +24,16 @@ module.exports = function awaitEvent({ eventEmitter, resolveOn = [], rejectOn = 
             return function ()
             {
                 unregister();
-                
+
                 const value = arguments[0];
                 const args = Array.prototype.slice.apply(arguments);
-        
+
                 if (events.length > 1)
                     return resolve({ name: anEvent, value, args });
-                
+
                 if (args.length > 1 || forceArray)
                     return resolve(args);
-                
+
                 resolve(value);
             }
         }
@@ -45,7 +45,7 @@ module.exports = function awaitEvent({ eventEmitter, resolveOn = [], rejectOn = 
 
             events.forEach((anEvent, anIndex) =>
                 eventEmitter.removeListener(anEvent, eventFunctions[anIndex]));
-            errorEvents.forEach((anEvent, anIndex) => 
+            errorEvents.forEach((anEvent, anIndex) =>
                 eventEmitter.removeListener(anEvent, errorFunctions[anIndex]));
         }
     });
@@ -79,7 +79,7 @@ TimeoutError.prototype = Object.create(Error.prototype);
 TimeoutError.prototype.constructor = TimeoutError;
 
 
-function EventError(anEventName)
+function EventError(anEventName, originalError)
 {
     const error = new Error("Operation errored");
 
@@ -92,6 +92,7 @@ function EventError(anEventName)
     });
 
     error.eventName = anEventName;
+    error.originalError = originalError;
 
     Object.setPrototypeOf(error, EventError.prototype);
 
@@ -100,4 +101,3 @@ function EventError(anEventName)
 
 EventError.prototype = Object.create(Error.prototype);
 EventError.prototype.constructor = EventError;
-
