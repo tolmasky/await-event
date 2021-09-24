@@ -1,12 +1,20 @@
-
 module.exports = function awaitEvent({ eventEmitter, resolveOn = [], rejectOn = [], timeout = Infinity, forceArray = false })
 {
+    if (!eventEmitter)
+        throw new Error("No event emitter provided");
+
     const events = [].concat(resolveOn);
-    const errorEvents = [].concat(rejectOn)
+    const errorEvents = [].concat(rejectOn);
+
+    if (events.length === 0 && errorEvents.length === 0)
+        throw new Error("No events or errors provided. This makes the promise unsettleable");
+
+    // Timeout errors are created when the promise is created so that it preserves the stack trace.
+    const timeoutError = new TimeoutError(+timeout);
 
     return new Promise(function(resolve, reject)
     {
-        const timeoutID = +timeout < Infinity && setTimeout(errorOut(TimeoutError), +timeout);
+        const timeoutID = +timeout < Infinity && setTimeout(errorOut(timeoutError));
         const eventFunctions = events.map(anEvent => on(eventEmitter, anEvent, fired(anEvent)));
         const errorFunctions = errorEvents.map(anEvent => on(eventEmitter, anEvent, errorOut(EventError, anEvent)));
 
@@ -15,7 +23,8 @@ module.exports = function awaitEvent({ eventEmitter, resolveOn = [], rejectOn = 
             return function (...eventArguments)
             {
                 unregister();
-                reject(new aFunction(anEventName, eventArguments));
+                const error = typeof aFunction === "function" ? new aFunction(anEventName, eventArguments) : aFunction
+                reject(error);
             }
         }
 
